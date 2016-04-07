@@ -17,7 +17,7 @@ def call_api(method, params, token=None, delay_sec=0):
     url = "https://api.vk.com/method/{0}?{1}".format(
         method, encode_data_for_request(params, False))
     response = urlopen(url)
-    response_str = response.read().decode("utf-8")
+    response_str = response.read().decode("utf-8", errors="ignore")
     response_json = json.loads(response_str)
     if "error" in response_json:
         error_json = response_json["error"]

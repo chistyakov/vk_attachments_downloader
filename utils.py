@@ -11,6 +11,6 @@ def timestamp_to_str(timestamp, str_format="%Y-%m-%d %H:%M:%S"):
 def encode_data_for_request(params, bin_format=True):
     urlencoded = urllib.parse.urlencode(params)
     if bin_format:
-        return urlencoded.encode('utf-8')
+        return urlencoded.encode('utf-8', errors="ignore")
     else:
         return urlencoded
