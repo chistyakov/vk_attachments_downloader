@@ -1,4 +1,5 @@
 from vk_wrapper.dialog import Dialog
+from utils import print_in_encoding_of_console
 
 
 class DialogChooser(object):
@@ -23,7 +24,7 @@ class DialogChooser(object):
     def show_next_dialogs(self):
         subset_of_dialogs = self.get_next_subset_of_dialogs()
         for num, dialog in enumerate(subset_of_dialogs):
-            print("{0}) {1}\n".format(self.offset + num + 1, dialog))
+            print_in_encoding_of_console("{0}) {1}\n".format(self.offset + num + 1, dialog))
         self.shown_dialogs += subset_of_dialogs
         self.offset += self.count_to_get
 
