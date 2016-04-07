@@ -12,8 +12,8 @@ class EmptyURL(Exception):
 
 
 class AttachmentsDownloader(object):
-    DURATION_LIMIT = 20*60
-    FAILED_VIDEOS_FILENAME = "!failed_downloads.txt"
+    VIDEO_DURATION_LIMIT = 20*60
+    FAILED_DOWNLOADS_FILENAME = "!failed_downloads.txt"
     def __init__(self):
         self.current_filename = ""
         self.current_content = b""
@@ -54,7 +54,7 @@ class AttachmentsDownloader(object):
 
     def download_video_list(self, data_list):
         for (self.current_filename, self.current_url, self.current_file_date, duration) in data_list:
-            if duration < self.DURATION_LIMIT and self.current_file_extension == ".mp4":
+            if duration < self.VIDEO_DURATION_LIMIT and self.current_file_extension == ".mp4":
                 self.download_current_file()
             else:
                 self.mark_current_file_as_fail("not mp4 or too big duration")
@@ -115,7 +115,7 @@ class AttachmentsDownloader(object):
     def save_failed_downloads(self):
         if self.list_of_failed_downloads:
             list_of_failed_downloads_filepath = os.path.join(
-                self.subdirectory_to_save, self.FAILED_VIDEOS_FILENAME)
+                self.subdirectory_to_save, self.FAILED_DOWNLOADS_FILENAME)
             with open(list_of_failed_downloads_filepath, 'w') as f:
                 f.write("Список нескачанных файлов. Попробуйте скачать их вручную\n")
                 f.write("тип - имя - url - причина\n")
