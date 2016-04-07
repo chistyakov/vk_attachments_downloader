@@ -4,6 +4,7 @@
 import getpass
 from urllib.error import URLError
 import sys
+import traceback
 
 from vk_wrapper.dialog import MEDIA_TYPE
 from vk_wrapper.auth import auth
@@ -12,6 +13,14 @@ from downloader import AttachmentsDownloader
 
 VK_APPLICATION_ID = 5345641
 AUTH_RIGHTS = "messages,video"
+
+def call_main_with_prompt_on_exit():
+    try:
+        main()
+    except Exception as e:
+        print(e)
+        print(traceback.format_exc())
+        input()
 
 
 def main():
@@ -54,4 +63,4 @@ def choose_dialog(token):
 
 
 if __name__ == "__main__":
-    main()
+    call_main_with_prompt_on_exit()
