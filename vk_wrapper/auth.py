@@ -7,7 +7,7 @@ import urllib
 from urllib.parse import urlparse
 from html.parser import HTMLParser
 
-from utils import encode_data_for_request
+from utils import encode_data_for_request, input_with_prompt_on_encoding_of_console
 
 
 class FormParser(HTMLParser):
@@ -53,7 +53,7 @@ class FormParser(HTMLParser):
 
 class WrongCredentialsChecker(HTMLParser):
     def __init__(self):
-        HTMLParser.__init__(self, False)
+        HTMLParser.__init__(self)
         self.service_msg_warning_on_page = False
         self.current_tag_is_service_msg_warning = False
         self.service_msg_warning_text = ""
@@ -105,7 +105,7 @@ def auth(email, password, client_id, scope):
         parser = FormParser()
         parser.feed(doc)
         parser.close()
-        parser.params["code"] = input("Type code from SMS: ")
+        parser.params["code"] = input_with_prompt_on_encoding_of_console("Type code from SMS: ")
         if parser.method == "POST":
             response = opener.open("https://m.vk.com" + parser.url, parser.encoded_params)
         else:

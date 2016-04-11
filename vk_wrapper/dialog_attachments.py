@@ -3,7 +3,7 @@ import re
 
 import vk_wrapper.dialog
 from vk_wrapper.caller import call_api
-from utils import encode_data_for_request
+from utils import encode_data_for_request, print_in_encoding_of_console
 
 
 class VideoNotFoundException(Exception):
@@ -46,13 +46,13 @@ class DialogHistoryAttachementsFetcher(object):
         return self.attachments
 
     def get_video_download_links(self, opener):
-        print("получение прямых ссылок на видео через парсинг html")
+        print_in_encoding_of_console("получение прямых ссылок на видео через парсинг html")
         try:
             video_attachments_parser = VideoAttachmentsParser(
                 self.dialog, opener)
             self.video_parsed_download_urls = video_attachments_parser.get_download_urls()
         except (URLError, FailToExtractDirectVideoLinks) as e:
-            print("произошла ошибка при попытке получения прямых ссылок на видео\n{0}".format(e))
+            print_in_encoding_of_console("произошла ошибка при попытке получения прямых ссылок на видео\n{0}".format(e))
 
     def _request_subset_of_attachments(self, start_from):
         params = [
@@ -127,11 +127,6 @@ class DialogHistoryAttachementsFetcher(object):
         name = doc_json['title']
         date = doc_json['date']
         return (name, url, date)
-
-    def link_json_post_processing(self, item_json):
-        link_json = item_json['link']
-        print(link_json)
-        return (0, 0, 0)
 
 
 class FailToExtractDirectVideoLinks(Exception):

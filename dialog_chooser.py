@@ -1,5 +1,5 @@
 from vk_wrapper.dialog import Dialog
-from utils import print_in_encoding_of_console
+from utils import print_in_encoding_of_console, input_with_prompt_on_encoding_of_console
 
 
 class DialogChooser(object):
@@ -18,8 +18,8 @@ class DialogChooser(object):
         return self.shown_dialogs[self.choice]
 
     def print_greating(self):
-        print("=" * 40)
-        print("Последние беседы и диалоги:")
+        print_in_encoding_of_console("=" * 40)
+        print_in_encoding_of_console("Последние беседы и диалоги:")
 
     def show_next_dialogs(self):
         subset_of_dialogs = self.get_next_subset_of_dialogs()
@@ -33,9 +33,10 @@ class DialogChooser(object):
 
     def ask_number(self):
         while self.choice not in range(len(self.shown_dialogs)):
-            inputed_str = input("Выберите номер диалога ('n' --- загрузка следующих "
-                                "{0} диалогов, 'q' --- выход): ".format(
-                                    self.count_to_get))
+            inputed_str = input_with_prompt_on_encoding_of_console(
+                "Выберите номер диалога ('n' --- загрузка следующих "
+                "{0} диалогов, 'q' --- выход): ".format(
+                    self.count_to_get))
             if inputed_str == "q":
                 raise StopIteration
             if inputed_str == "n":

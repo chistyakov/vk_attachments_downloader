@@ -1,11 +1,12 @@
 from datetime import datetime
 import os
+import re
 from urllib.parse import urlparse
 from urllib.error import URLError
 from urllib.request import urlopen
 
 from vk_wrapper.dialog import MEDIA_TYPE
-from utils import timestamp_to_str
+from utils import timestamp_to_str, print_in_encoding_of_console
 
 class EmptyURL(Exception):
     pass
@@ -42,7 +43,7 @@ class AttachmentsDownloader(object):
     def create_subdirectory_to_save_files(self):
         if not os.path.exists(self.subdirectory_to_save):
             os.mkdir(self.subdirectory_to_save)
-        print("файлы будут сохранены в подпапку {0}".format(self.subdirectory_to_save))
+        print_in_encoding_of_console("файлы будут сохранены в подпапку {0}".format(self.subdirectory_to_save))
 
     def download_list(self, data_list, media_type):
         self.current_media_type = media_type
@@ -67,12 +68,12 @@ class AttachmentsDownloader(object):
         try:
             self.request_current_file_content()
             self.write_current_file()
-        except (URLError, EmptyURL) as e:
+        except Exception as e:
             self.mark_current_file_as_fail(str(e))
 
     def request_current_file_content(self):
         if self.current_url:
-            print("скачивание {0}".format(self.current_url))
+            print_in_encoding_of_console("скачивание {0}".format(self.current_url))
             self.current_content = urlopen(self.current_url).read()
         else:
             raise EmptyURL()
@@ -83,7 +84,7 @@ class AttachmentsDownloader(object):
             self.write_current_file(postfix + 1)
         else:
             self.current_filename = new_filename
-            print("сохранение в {0}".format(self.current_filename))
+            print_in_encoding_of_console("сохранение в {0}".format(self.current_filename))
             with open(self.current_filename, 'wb') as f:
                 f.write(self.current_content)
 
@@ -94,7 +95,7 @@ class AttachmentsDownloader(object):
         else:
             filename = " - ".join((date_str, self.current_filename))
 
-        filename = filename.replace(r"/", ".")
+        filename = re.sub('[^\w\-_\. ]', '_', filename)
         filename = filename[:100]
         filename = os.path.splitext(filename)[0]
         if postfix:
@@ -116,12 +117,12 @@ class AttachmentsDownloader(object):
         if self.list_of_failed_downloads:
             list_of_failed_downloads_filepath = os.path.join(
                 self.subdirectory_to_save, self.FAILED_DOWNLOADS_FILENAME)
-            with open(list_of_failed_downloads_filepath, 'w') as f:
+            with open(list_of_failed_downloads_filepath, 'w', encoding="utf-8") as f:
                 f.write("Список нескачанных файлов. Попробуйте скачать их вручную\n")
                 f.write("тип - имя - url - причина\n")
                 for fail in self.list_of_failed_downloads:
                     f.write("{0} - {1} - {2} - {3}\n".format(fail[0].name, fail[1], fail[2], fail[3]))
-            print("список неудачных загрузок ({0} шт.) сохранен в файл {1}".format(
+            print_in_encoding_of_console("список неудачных загрузок ({0} шт.) сохранен в файл {1}".format(
                 len(self.list_of_failed_downloads),
                 list_of_failed_downloads_filepath))
 

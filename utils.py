@@ -21,5 +21,12 @@ def print_in_encoding_of_console(*objects, sep=' ', end='\n', file=sys.stdout):
     if enc == 'UTF-8':
         print(*objects, sep=sep, end=end, file=file)
     else:
-        f = lambda obj: str(obj).encode(enc, errors='backslashreplace').decode(enc)
+        f = lambda obj: convert_encode(obj, enc)
         print(*map(f, objects), sep=sep, end=end, file=file)
+
+def convert_encode(obj, enc):
+    return str(obj).encode(enc, errors="backslashreplace").decode(enc)
+
+def input_with_prompt_on_encoding_of_console(prompt_str):
+    print_in_encoding_of_console(prompt_str, end='')
+    return input()
