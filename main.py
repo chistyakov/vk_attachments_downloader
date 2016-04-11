@@ -18,10 +18,11 @@ AUTH_RIGHTS = "messages,video"
 def call_main_with_prompt_on_exit():
     try:
         main()
+        press_any_key_message()
     except Exception as e:
         print_in_encoding_of_console(e)
         print_in_encoding_of_console(traceback.format_exc())
-        input()
+        press_any_key_message()
 
 
 def main():
@@ -61,6 +62,9 @@ def choose_dialog(token):
         sys.exit()
     return dialog
 
+def press_any_key_message():
+    print_in_encoding_of_console("=" * 40)
+    input_with_prompt_on_encoding_of_console("Нажмите любую клавишу для выхода")
 
 
 if __name__ == "__main__":
